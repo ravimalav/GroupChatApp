@@ -1,6 +1,10 @@
 
 const User=require('../models/user')
 const bcrypt=require('bcrypt')
+const jwt=require('jsonwebtoken')
+// const process=require('process')
+
+
 exports.signup=async(req,res)=>
 {
     try
@@ -37,4 +41,52 @@ exports.signup=async(req,res)=>
        res.status(500).send({error:"signup invalid"})
     }
 
+}
+
+
+
+exports.login=async(req,res)=>
+{
+    try{
+         const {loginEmail,loginPassword}=req.body;
+         
+         const jsonTokenGenerator=(id)=>
+         {
+            return jwt.sign({userId:id},process.env.JWT_SECRET_KEY);
+         }
+         
+         const isUserExist=await User.findOne({
+            where:{email:loginEmail}
+         })
+        
+         if(isUserExist)
+         {
+            bcrypt.compare(loginPassword,isUserExist.password,(err,result)=>
+            {
+                if(err)
+                {
+                    throw new Error("Something went wrong")
+                }
+                if(result===true)
+                {
+                   res.status(200).json({success:true,token:jsonTokenGenerator(isUserExist.id)})
+                }
+                else{
+                    return res.status(401).json({error:"error"})
+                }
+                 
+            })
+            
+         }
+         else
+         {
+            return res.status(404).json({error:"user not exist",success:false})
+         }
+         
+        
+    }
+    catch(err)
+    {
+       res.status(500).send(err)
+    }
 }

@@ -4,13 +4,17 @@ const app=express()
 
 const sequelize=require('./util/database')
 
+const dotenv=require('dotenv')
+dotenv.config()
+
+
 const bodyParser=require("body-parser")
 app.use(bodyParser.json())
 
 const cors=require('cors')
 app.use(cors(
     {
-        origin:'*',
+        origin:true,
         credentials:true,
     }
 ));
