@@ -1,8 +1,6 @@
 
 const User=require('../models/user')
 const bcrypt=require('bcrypt')
-
-
 exports.signup=async(req,res)=>
 {
     try
@@ -17,11 +15,10 @@ exports.signup=async(req,res)=>
             where: {
                 email:userEmail
             } 
-        });
-
+        })
         if(findUser)
         {
-           return res.status(401).send({error:"user already exist",success:false})
+           return res.status(401).send({response:"user already exist",success:false})
         }
         else{
             const createUser=await User.create(
@@ -35,7 +32,7 @@ exports.signup=async(req,res)=>
             res.status(200).send({response:createUser,success:true})
         }
     }
-    catch
+    catch(error)
     {
        res.status(500).send({error:"signup invalid"})
     }
