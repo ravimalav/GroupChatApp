@@ -22,6 +22,11 @@ const Message=sequelize.define('message',
             msg: 'Please provide field within 1 to 200 characters.'
           }
         }
+    },
+    user_name:
+    {
+      type:Sequelize.STRING,
+      allowNull:false
     }
 });
 

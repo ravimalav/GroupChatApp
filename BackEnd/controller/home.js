@@ -12,7 +12,10 @@ exports.getusers=async(req,res)=>
             }
         )
         console.log("username==>>"+userName)
-        res.status(201).send({response:userName})
+
+          const messages=await Message.findAll()    //find all messages form table
+          res.status(201).send({loginresponse:userName,messageresponse:messages, success:true})
+      
     }
     catch(err)
     {
@@ -25,12 +28,15 @@ exports.postmessage=async(req,res)=>
     try{
           const {inputMessage}=req.body;
           const username=req.user.name;
+          console.log("name is "+req.user.name)
           const createMessage=await Message.create(
             {
-                message_body:inputMessage
+                message_body:inputMessage,
+                user_name:req.user.name,
+                userUserId:req.user.user_id
+                
             }
-          )
-          console.log("name of user is "+req.user.name)
+          ) 
           res.status(201).send({response:username})
     }
     catch(err)
@@ -38,3 +44,4 @@ exports.postmessage=async(req,res)=>
        res.status(500).send({error:"something wrong in chat system"})
     }
 }
+
