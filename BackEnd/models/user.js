@@ -25,13 +25,17 @@ const User=sequelize.define('user',
     phone_number:
     {
         type:Sequelize.STRING,  
-        allowNull:false,
-        unique:true
+        allowNull:false
     },
     password:
     {
         type:Sequelize.STRING,
         allowNull:false
+    },
+    login_status:
+    {
+        type:Sequelize.BOOLEAN,
+        default:false
     },
     createdAt:Sequelize.DATE,
     updatedAt:Sequelize.DATE

@@ -2,8 +2,12 @@
 const User=require('../models/user')
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
-// const process=require('process')
+const process=require('process')
 
+const jsonTokenGenerator=(id)=>
+{
+   return jwt.sign({userId:id},process.env.JWT_SECRET_KEY);
+}
 
 exports.signup=async(req,res)=>
 {
@@ -24,7 +28,7 @@ exports.signup=async(req,res)=>
         {
            return res.status(401).send({response:"user already exist",success:false})
         }
-        else{
+          
             const createUser=await User.create(
                 {
                     name:userName,
@@ -33,14 +37,14 @@ exports.signup=async(req,res)=>
                     password:hashPassword
                 }
             )
+        
             res.status(200).send({response:createUser,success:true})
-        }
+        
     }
     catch(error)
     {
        res.status(500).send({error:"signup invalid"})
     }
-
 }
 
 
@@ -50,10 +54,6 @@ exports.login=async(req,res)=>
     try{
          const {loginEmail,loginPassword}=req.body;
          
-         const jsonTokenGenerator=(id)=>
-         {
-            return jwt.sign({userId:id},process.env.JWT_SECRET_KEY);
-         }
          
          const isUserExist=await User.findOne({
             where:{email:loginEmail}
@@ -61,7 +61,7 @@ exports.login=async(req,res)=>
         
          if(isUserExist)
          {
-            bcrypt.compare(loginPassword,isUserExist.password,(err,result)=>
+            bcrypt.compare(loginPassword,isUserExist.password,async(err,result)=>
             {
                 if(err)
                 {
@@ -69,7 +69,7 @@ exports.login=async(req,res)=>
                 }
                 if(result===true)
                 {
-                   res.status(200).json({success:true,token:jsonTokenGenerator(isUserExist.id)})
+                   res.status(200).json({success:true,token:jsonTokenGenerator(isUserExist.user_id)})
                 }
                 else{
                     return res.status(401).json({error:"error"})
@@ -82,8 +82,7 @@ exports.login=async(req,res)=>
          {
             return res.status(404).json({error:"user not exist",success:false})
          }
-         
-        
+            
     }
     catch(err)
     {

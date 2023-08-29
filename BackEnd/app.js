@@ -23,6 +23,16 @@ app.use(cors(
 const userRouter=require('./routes/user')
 app.use('/user',userRouter)
 
+const homeRouter=require('./routes/home')
+app.use('/home',homeRouter)
+
+
+const User=require('./models/user')
+const Message=require('./models/message')
+
+User.hasMany(Message)        //many to many
+Message.belongsTo(User)     //one to many with foreign key in model B
+
 sequelize.sync()
 // sequelize.sync({force:true})
 
