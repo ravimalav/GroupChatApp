@@ -11,8 +11,6 @@ exports.getusers=async(req,res)=>
                 where:{login_status:true}
             }
         )
-        console.log("username==>>"+userName)
-
           const messages=await Message.findAll()    //find all messages form table
           res.status(201).send({loginresponse:userName,messageresponse:messages, success:true})
       
@@ -21,7 +19,7 @@ exports.getusers=async(req,res)=>
     {
        res.status(500).send({error:"internal server error"})
     }
-}
+}   
 
 exports.postmessage=async(req,res)=>
 {
@@ -45,3 +43,15 @@ exports.postmessage=async(req,res)=>
     }
 }
 
+
+exports.oldmessages=async(req,res)=>
+{
+    try{
+          const findOldMessages=await Message.findAll()
+          res.status(201).send({response:findOldMessages,success:true})
+    }
+    catch
+    {
+        res.status(500).send({error:"Something went wrong at server side to get old messages"})
+    }
+}

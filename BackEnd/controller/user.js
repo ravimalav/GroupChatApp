@@ -4,9 +4,9 @@ const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 const process=require('process')
 
-const jsonTokenGenerator=(id)=>
+const jsonTokenGenerator=(id,name)=>
 {
-   return jwt.sign({userId:id},process.env.JWT_SECRET_KEY);
+   return jwt.sign({userId:id,loginUserName:name},process.env.JWT_SECRET_KEY);
 }
 
 exports.signup=async(req,res)=>
@@ -17,7 +17,6 @@ exports.signup=async(req,res)=>
         //encrypt the password using bcryptlibrary
         const saltRound=10;   //to strength of incryption we used saltrounds
         const hashPassword=await bcrypt.hash(userPassword,saltRound)
-        console.log("hashPassword==>>>"+hashPassword)
 
         const findUser=await User.findOne({
             where: {
@@ -69,7 +68,7 @@ exports.login=async(req,res)=>
                 }
                 if(result===true)
                 {
-                   res.status(200).json({success:true,token:jsonTokenGenerator(isUserExist.user_id)})
+                   res.status(200).json({success:true,token:jsonTokenGenerator(isUserExist.user_id,isUserExist.name)})
                 }
                 else{
                     return res.status(401).json({error:"error"})

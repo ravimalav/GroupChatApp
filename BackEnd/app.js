@@ -7,6 +7,10 @@ const sequelize=require('./util/database')
 const dotenv=require('dotenv')
 dotenv.config()
 
+//socket.io for real time system
+
+const socket=require('socket.io')
+
 
 const bodyParser=require("body-parser")
 app.use(bodyParser.json())
