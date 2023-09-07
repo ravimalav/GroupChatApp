@@ -30,12 +30,27 @@ app.use('/user',userRouter)
 const homeRouter=require('./routes/home')
 app.use('/home',homeRouter)
 
+const groupRouter=require('./routes/group')
+app.use('/group',groupRouter)
+
+const messageRouter=require('./routes/message')
+app.use('/message',messageRouter)
+
+//assosiations
 
 const User=require('./models/user')
 const Message=require('./models/message')
 
 User.hasMany(Message)        //many to many
 Message.belongsTo(User)     //one to many with foreign key in model B
+
+const Group=require('./models/group')
+const UserGroupTable=require('./models/usergroup')
+Group.belongsToMany(User,{through:UserGroupTable})
+User.belongsToMany(Group,{through:UserGroupTable})
+
+Group.hasMany(Message)     
+Message.belongsTo(Group)    
 
 sequelize.sync()
 // sequelize.sync({force:true})

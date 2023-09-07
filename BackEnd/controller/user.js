@@ -17,7 +17,7 @@ exports.signup=async(req,res)=>
         //encrypt the password using bcryptlibrary
         const saltRound=10;   //to strength of incryption we used saltrounds
         const hashPassword=await bcrypt.hash(userPassword,saltRound)
-
+    
         const findUser=await User.findOne({
             where: {
                 email:userEmail
@@ -52,7 +52,6 @@ exports.login=async(req,res)=>
 {
     try{
          const {loginEmail,loginPassword}=req.body;
-         
          
          const isUserExist=await User.findOne({
             where:{email:loginEmail}

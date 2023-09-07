@@ -1,18 +1,35 @@
+
 const User=require('../models/user')
-const Message=require('../models/message')
+const userGroup=require('../models/usergroup')
+
 
 
 exports.getusers=async(req,res)=>
 {
     try{
         await req.user.update({login_status:true})
-        const userName=await User.findAll(
+        const groupId=req.header('GroupId')
+        console.log("get users groupId===>>>>> ", groupId)
+         
+        const userId=await userGroup.findAll(
             {
-                where:{login_status:true}
+                where:
+                {
+                    groupTableId:groupId
+                }
             }
         )
-          const messages=await Message.findAll()    //find all messages form table
-          res.status(201).send({loginresponse:userName,messageresponse:messages, success:true})
+         const records=await userId.map(result=>result.userUserId)
+         console.log("user id records that belongs to group table ", records)
+        const userName=await User.findAll(
+            {
+                where:{
+                    user_id:records
+                }
+            }
+        )
+        //   const messages=await Message.findAll()    //find all messages form table
+          res.status(201).send({response:userName, success:true})
       
     }
     catch(err)
@@ -21,37 +38,3 @@ exports.getusers=async(req,res)=>
     }
 }   
 
-exports.postmessage=async(req,res)=>
-{
-    try{
-          const {inputMessage}=req.body;
-          const username=req.user.name;
-          console.log("name is "+req.user.name)
-          const createMessage=await Message.create(
-            {
-                message_body:inputMessage,
-                user_name:req.user.name,
-                userUserId:req.user.user_id
-                
-            }
-          ) 
-          res.status(201).send({response:username})
-    }
-    catch(err)
-    {
-       res.status(500).send({error:"something wrong in chat system"})
-    }
-}
-
-
-exports.oldmessages=async(req,res)=>
-{
-    try{
-          const findOldMessages=await Message.findAll()
-          res.status(201).send({response:findOldMessages,success:true})
-    }
-    catch
-    {
-        res.status(500).send({error:"Something went wrong at server side to get old messages"})
-    }
-}
