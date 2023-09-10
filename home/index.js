@@ -112,6 +112,8 @@ function createGroupIcon(data,groupName)
          let arr=JSON.parse(localStorage.getItem('array'));
          arr=[]
          localStorage.setItem('array',JSON.stringify(arr))
+
+         localStorage.setItem('groupId',data.id)
         
         //To know which user joined the group
         const getUserData=await fetch('http://localhost:3000/home/getusers',     
@@ -127,23 +129,28 @@ function createGroupIcon(data,groupName)
     
         const getuserData=await getUserData.json()
         const getuserArray=getuserData.response
-        getuserArray.forEach((element)=>
+        getuserArray.forEach((element)=>               //show joined user on screen 
         {
             chatUserName(element)
         })
         
+        
+
         //Show Group Admin name on top left
 
-        const divShowAdmin=document.querySelector('.showadminname')
+        // const divShowAdmin=document.querySelector('.showadminname')
 
-        divShowAdmin.innerHTML=`<h6>Group Admin: ${data.admin_name}
-                                </br>
-                                You: ${loginUserName}</h6>`
+        // divShowAdmin.innerHTML=`<h6>Group Admin: ${data.admin_name}
+        //                         </br>
+        //                         You: ${loginUserName}</h6>`
+
+    
+        //create dropdown box 
+        dropDown()                       
 
         // creating form to send message 
-        createFooterFunction(data.id)
-        getOlderMessage(data.id)
-        addUserInGroupFunction(data.id)
+        createFooterFunction()
+        getOlderMessage()
     })
       
 
@@ -159,10 +166,13 @@ function createGroupIcon(data,groupName)
 }
 
 
+// create footer and send message button
+
 const containerFooter=document.querySelector('.containerFooter')
 
-function createFooterFunction(groupId)
+function createFooterFunction()
 {
+    const groupId=parseInt(localStorage.getItem('groupId'))
     //to create form inside footerdiv
     containerFooter.innerHTML=`<footer class="footer">
     <div class="footerDiv">
@@ -234,23 +244,28 @@ sendButton.addEventListener('click',async(e)=>
    })
 }
 
-function getOlderMessage(groupId)
+function getOlderMessage()
 {
+    const groupId=parseInt(localStorage.getItem('groupId'))
+    
     const olderMessageDiv=document.querySelector('.olderMessagediv')
 
     olderMessageDiv.innerHTML=`<button class="olderMessage">get older message</button>`
 
     const olderMessage=document.querySelector('.olderMessage')
   
-    array=JSON.parse(localStorage.getItem('array'))
+
     console.log("array in ls is ", localStorage.getItem('array'))
+    const lastId=parseInt(localStorage.getItem('lastId'))
     // get older messages 
     olderMessage.addEventListener('click',async(e)=>
     {
     try{
         console.log("triggered")
+        array=JSON.parse(localStorage.getItem('array'))
+        const firstId=array.length>0?array[0].id:lastId
             e.preventDefault();
-            const oldMessages=  await fetch(`http://localhost:3000/message/oldmessages?id=${array[0].id}`,
+            const oldMessages=  await fetch(`http://localhost:3000/message/oldmessages?id=${firstId}`,
             {method:'get',
             credential:'include',
             headers:{
@@ -259,42 +274,49 @@ function getOlderMessage(groupId)
             'GroupId':`${groupId}`
         }})
 
-        const response=await oldMessages.json()
+        const result=await oldMessages.json()
 
-        //create a array for storing message and then append local storage array with it
+        if(result.success===true)
+        {
+            //create a array for storing message and then append local storage array with it
         let appendMessageArray=[]
-            response.response.forEach((message)=>
-            {
-                const id=message.message_id
-                const inputMessage=message.message_body
-                const user_name=message.user_name
-                const arrObj={
-                    id,
-                    inputMessage,
-                    user_name
-                }
-                appendMessageArray.push(arrObj)
-            }) 
-            let appendedArray=appendMessageArray.concat(JSON.parse(localStorage.getItem('array')))
-            localStorage.setItem('array',JSON.stringify(appendedArray))
-
-            tBody.innerHTML=""      //clearing new messages before getting new message
-
-            //get all messages old+new
-               const parsedArray=JSON.parse(localStorage.getItem('array'))
-            if(parsedArray==null)
-            {
-                alert("There is no chat yet!")
+        result.response.forEach((message)=>
+        {
+            const id=message.message_id
+            const inputMessage=message.message_body
+            const user_name=message.user_name
+            const arrObj={
+                id,
+                inputMessage,
+                user_name
             }
-            else
-            {
-                for(let i=0;i<parsedArray.length;i++)
-                {       
-                tBody.innerHTML+=`<tr>
-                <td><span>${parsedArray[i].user_name}:</span> ${parsedArray[i].inputMessage}</td>
-                </tr>`
-                }
+            appendMessageArray.push(arrObj)
+        }) 
+        let appendedArray=appendMessageArray.concat(JSON.parse(localStorage.getItem('array')))
+        localStorage.setItem('array',JSON.stringify(appendedArray))
+
+        tBody.innerHTML=""      //clearing old messages before getting new message
+
+        //get all messages old+new
+           const parsedArray=JSON.parse(localStorage.getItem('array'))
+        if(parsedArray==null)
+        {
+            alert("There is no chat yet!")
+        }
+        else
+        {
+            for(let i=0;i<parsedArray.length;i++)
+            {       
+            tBody.innerHTML+=`<tr>
+            <td><span>${parsedArray[i].user_name}:</span> ${parsedArray[i].inputMessage}</td>
+            </tr>`
             }
+        }
+        }
+        else
+        {
+             alert(`${result.response}`)
+        }
     }
     catch(err)
     {
@@ -304,21 +326,120 @@ function getOlderMessage(groupId)
 }
 
 
+// add dropdown(Group info button) at top right of header
+
+function dropDown()
+{
+    document.querySelector('.dropdown').innerHTML=
+    `<span>G-Info </span>
+    <label>
+      <input type="checkbox">
+      <ul>
+        <li val="Admin"> <button class="dropdownbutton" id="admin">Admin</button> </li>
+        <li val="User-Info"> <button class="dropdownbutton" id="userinfo">User Info</button> </li>
+        <li val="Invite-User"> <button class="dropdownbutton" id="inviteuser">Add Member</button> </li>
+        <li val="Home=Page"> <button class="dropdownbutton" id="homepage">Home Page</button> </li>
+        <li val="Logout"> <button class="dropdownbutton" id="logout">Logout</button> </li>
+      </ul>
+    </label>`
+     getAdminList();
+     inviteUserInGroupFunction();
+     userInformationFunction();
+     homePageFuntion();
+     logoutFunction();
+}
+
+//show admin popup in front of screen
+const modal = document.getElementById("myModal");
+const modalContent=document.querySelector('.modal-content')
+const groupId=parseInt(localStorage.getItem('groupId'))
+
+
+function getAdminList()
+{
+const groupId=parseInt(localStorage.getItem('groupId'))
+// Get the button that opens the modal
+const admin=document.getElementById('admin')
+console.log("admin is ", admin)
+
+admin.addEventListener('click',async(e)=>
+{
+    try{
+            e.preventDefault();
+            
+           const getAdminName=await fetch('http://localhost:3000/group/getadmin',
+           {
+            method:'get',
+            credential:'include',
+            headers:{
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization':token,
+            'GroupId':`${groupId}`
+            }
+           })
+
+           const result=await getAdminName.json();
+           console.log("get admin lsit", result.response)
+           addDataInParagraph(result.response)
+    }
+    catch(err)
+    {
+         console.log(err);
+    }
+})
+
+// add admin name in paragraph dynamically
+
+async function addDataInParagraph(data)
+{
+    // const p=document.createElement('p')
+    // modalContent.appendChild(p)
+    
+    modalContent.innerHTML=`<span class="close">&times;</span>`
+
+    await data.forEach((element)=>
+    {
+        modalContent.innerHTML+=`
+        <p>${element.name} is admin</p>`
+    })
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+admin.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+  modalContent.innerHTML="";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+    modalContent.innerHTML="";
+  }
+}
+}}
+
 // function to add user in group
 
-function addUserInGroupFunction(groupId){
+function inviteUserInGroupFunction(){
     try{
-        const divInviteUser=document.querySelector('.adduseringroup')
+        // const divInviteUser=document.querySelector('.adduseringroup')
 
-        divInviteUser.innerHTML+=`<button id="inviteuser">add user</button>`
-
+        // divInviteUser.innerHTML+=`<button id="inviteuser">add user</button>`
+        
+        const groupId=parseInt(localStorage.getItem('groupId'))
         const inviteUserInGroup=document.getElementById('inviteuser')
-
 
         inviteUserInGroup.addEventListener('click',async(e)=>
         {
             e.preventDefault();
-            const inviteduserid=prompt("Enter Userid")
+            const inviteduserNumber=prompt("Enter User Phone Number")
             const invitedUserData=await fetch(`http://localhost:3000/group/adduseringroup`,     
             {
                 method:'post',
@@ -328,7 +449,7 @@ function addUserInGroupFunction(groupId){
                     'Authorization':token,
                     'GroupId':`${groupId}`
                 },
-                body:JSON.stringify({inviteduserid})
+                body:JSON.stringify({inviteduserNumber})
             })
             const result=await invitedUserData.json()
              console.log("inviteduserdata  ", result.response)
@@ -339,6 +460,168 @@ function addUserInGroupFunction(groupId){
     {
        console.log(err)
     }
+}
+
+
+async function userInformationFunction()
+{   
+// Get the button that opens the modal
+const userInfo=document.getElementById('userinfo')
+console.log("userinfo is ", userInfo)
+
+userInfo.addEventListener('click',async(e)=>
+{
+    try{
+           e.preventDefault();
+            
+           const userInfoData=await fetch('http://localhost:3000/home/getusers',
+           {
+            method:'get',
+            credential:'include',
+            headers:{
+            'Content-Type': 'application/json;charset=utf-8',
+            'Authorization':token,
+            'GroupId':`${groupId}`
+            }
+           })
+
+           const result=await userInfoData.json();
+           console.log("get user info ", result.response)
+           console.log("is admin ==>>>",result.isadmin.role)
+           showGroupUsers(result.response,result.isadmin.role)
+    }
+    catch(err)
+    {
+         console.log(err);
+    }
+})
+
+// add admin name and button in paragraph dynamically
+
+async function showGroupUsers(data,isloginUserAdmin)
+{
+modalContent.innerHTML=`<span class="close">&times;</span>`
+
+  data.forEach((element)=>
+   {
+    const div=document.createElement('div')
+    if(isloginUserAdmin==='Admin')
+    {
+    div.innerHTML=`
+    <p>${element.name}</p>
+    <button class="removeButton" id=${element.user_id}>Remove</button>
+    <button class="makeAdminButton" id=${element.user_id}>Make Admin</button>`
+     
+    
+    const removeButton=div.querySelector('.removeButton')
+    removeButton.addEventListener('click',async(e)=>
+    {
+        e.preventDefault()
+        const userId=e.target.getAttribute('id')
+        removeUserFunction(userId)
+    })
+    const makeAdminButton=div.querySelector('.makeAdminButton')
+    makeAdminButton.addEventListener('click',async(e)=>
+    {
+        e.preventDefault()
+        const userId=e.target.getAttribute('id')
+        makeAdminFunction(userId)
+    })
+}
+else{
+    div.innerHTML=`<p>${element.name}</p>`
+}
+
+    modalContent.appendChild(div)    
+   })
+
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+userInfo.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+  modalContent.innerHTML="";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+    modalContent.innerHTML="";
+  }
+}
+}
+
+async function removeUserFunction(userId)
+{
+    try{
+        await fetch(`http://localhost:3000/home/removeuser/${userId}`,
+        {
+        method:'delete',
+        credential:'include',
+        headers:{
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization':token,
+        'GroupId':`${groupId}`
+        }
+        }) 
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
+} 
+
+async function makeAdminFunction(userId)
+{
+    try{
+        await fetch(`http://localhost:3000/home/makeadmin/${userId}`,
+        {
+        method:'put',
+        credential:'include',
+        headers:{
+        'Content-Type': 'application/json;charset=utf-8',
+        'Authorization':token,
+        'GroupId':`${groupId}`
+        }
+        }) 
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
+}
+}
+
+
+
+
+
+function homePageFuntion()
+{
+    const homePage=document.getElementById('homepage')
+    
+    homePage.addEventListener('click',()=>
+    {
+         window.location.href='/home/index.html'
+    })
+}
+
+function logoutFunction()
+{
+    const logoutButton=document.getElementById('logout')
+    logoutButton.addEventListener('click',()=>
+    {
+        localStorage.removeItem('token')
+        localStorage.removeItem('groupId')
+        window.location.href='/signup/signup.html'
+    })
 }
 
 

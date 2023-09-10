@@ -187,4 +187,172 @@ a:hover
     left: 10px;
     border: none;
     background:none;
-  } 
+  }
+  
+  
+
+  /* dropdown style */
+
+  .dropdown {
+    position: absolute;
+    font-family: "Poppins", Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    /* background-color: #e62e46; */
+    border-radius: 4px;
+    width: 100px;
+    text-align: left;
+    right: 20px;
+    top: 2px;
+  }
+  
+  .dropdown > a,
+  .dropdown > span {
+    font-family: "Poppins", Helvetica, sans-serif;
+    font-size: 20px;
+    /* padding: 15px 25px 15px 15px; */
+    /* display: block; */
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .dropdown > a:before,
+  .dropdown > span:before {
+    position: absolute;
+    right: 20px;
+    top: 25px;
+    content: " ";
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid white;
+    cursor: none;
+  }
+  
+  .dropdown input[type="checkbox"] {
+    position: absolute;
+    display: block;
+    top: 0px;
+    left: 0px;
+    width: 80%;
+    height: 100%;
+    margin: 0px;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .dropdown input[type="checkbox"]:checked {
+    position: fixed;
+    z-index: +0;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+  .dropdown label {
+    width: 50%;
+  }
+  .dropdown ul {
+    text-align: left;
+    position: absolute;
+    top: 36px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    left: 0px;
+    list-style: none;
+    padding: 4px 0px;
+    display: none;
+    background-color: white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.175);
+    width: 118px;
+  }
+  
+  .dropdown input[type="checkbox"]:checked + ul {
+    display: block;
+  }
+  
+  .dropdown ul li {
+    display: block;
+    padding: 6px 20px;
+    white-space: nowrap;
+    min-width: 100px;
+  }
+  
+  .dropdown ul li:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+  
+  .dropdown ul li a {
+    text-decoration: none;
+    display: block;
+    color: black;
+  }
+  .dropdown .divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #e5e5e5;
+    font-size: 1px;
+    padding: 0;
+  }
+  .dropdown:hover {
+    background-position: right center;
+  }
+
+  .dropdownbutton
+  {
+    background: none;
+    text-decoration: none;
+    border: none;
+  }
+
+  /* drop down admin popup css */
+
+  .modal {
+    display: none; /* Hidden by default */
+    position: absolute; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    right: 0;
+    top: 0;
+    width: 50%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+.modal-content button
+{
+   background: rgb(214, 148, 86);
+   border: none;
+   border-radius: 5px ;
+   text-decoration: none;
+}
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
