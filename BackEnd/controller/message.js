@@ -48,9 +48,14 @@ exports.postmessage=async(req,res)=>
 exports.oldmessages=async(req,res)=>
 {
     try{
-        const id=+req.query.id||10;
+        if(+req.query.id===1)
+        {
+            return res.status(500).send({response:"There is no message in group"})
+        }
+        const lastId=+req.query.id;
+        console.log("id is===>>>>" ,lastId)
         const groupId=req.header('GroupId')
-
+    
         const numberOfRaws= await Message.count(
             {
                 where:{groupTableId:groupId}
@@ -62,14 +67,23 @@ exports.oldmessages=async(req,res)=>
             {
                 where:{
                     groupTableId:groupId,
-                    message_id:
-                    {
-                        [Op.between]:[id-10,id+1] ,  //between opertor does not include border element
-                    }
-                }
+                    message_id:{[Op.lt]:[lastId]}
+                },
             }
           )
-          res.status(201).send({response:findOldMessages,success:true})
+          const records=await findOldMessages.map((message)=>message.dataValues)
+          if(records.length>=10)
+          {
+               let newRecord=[]
+               for(let i=records.length-10;i<records.length;i++)
+               {
+                newRecord.push(records[i])
+               }
+               res.status(201).send({response:newRecord,success:true})
+          }
+          else{
+            res.status(201).send({response:records,success:true})
+          }    
     }
     catch
     {

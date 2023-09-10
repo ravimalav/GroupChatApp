@@ -15,9 +15,11 @@ exports.createGroup=async(req,res)=>
                 admin_id:req.user.user_id
             }
          )
+
          const userGroupTableData={
             groupTableId:createGroup.id,
-            userUserId:req.user.user_id
+            userUserId:req.user.user_id,
+            role:'Admin'
          }
            await userGroup.create(
              userGroupTableData
@@ -33,7 +35,6 @@ exports.createGroup=async(req,res)=>
 exports.getGroupsName=async(req,res)=>
 {
   try{
-
        const groupTableId=await userGroup.findAll(
         {
           where:
@@ -60,25 +61,74 @@ exports.getGroupsName=async(req,res)=>
   }
 }
 
+exports.getAdmin=async(req,res)=>
+{
+  try{
+            const groupId=req.header('GroupId')
+            const findAdminRaws=await userGroup.findAll(
+              {
+                where:
+                {
+                    groupTableId:groupId,
+                    role:'Admin'
+                }
+              }
+            )
+
+            const records=await findAdminRaws.map((element)=>element.dataValues)
+
+            const findAdminName=await User.findAll(            //find user's name that are admin in userGroupTable
+              {
+                where:
+                {
+                  user_id:records.map((res)=>res.userUserId)
+                }
+              }
+            )
+            res.status(201).send({response:findAdminName,success:true})
+  }
+  catch(err)
+  {
+    res.status(500).send({err})
+  }
+}
+
 exports.inviteUser=async(req,res)=>
 {
   try{
          const groupId=req.header('GroupId')
-         const {inviteduserid}=req.body;
+         const {inviteduserNumber}=req.body;
          
-         const checkuserId=await User.findByPk(inviteduserid)     //check that invited user is exist or not
-         
-         const checkAdmin=await Group.findByPk(groupId)           //check that requested user is admin or not
-         console.log("check admin id ===>>>>", checkAdmin.admin_id)
+         const isInvitedUserExist=await User.findOne(         //check that invited user is exist or not
+          {
+              where:
+              {
+                phone_number:inviteduserNumber
+              }
+          }
+         )  
+  
+         const isRequestedUserAdmin=await userGroup.findOne(         //check that requested user is admin or not
+          {
+            where:
+            {
+              groupTableId:groupId,
+              userUserId:req.user.user_id,
+              role:'Admin'
+            }
+          }
+         )          
+         console.log("check requesteduser is exist or not at invite user controller===>>>>", isRequestedUserAdmin)
         
-          if(checkuserId  && req.user.user_id==checkAdmin.admin_id )
+          if(isInvitedUserExist  && isRequestedUserAdmin )
           {
             await userGroup.create(
               {  groupTableId:groupId,
-                userUserId:inviteduserid}
-                )
-
-                 res.status(201).send({response:`${checkuserId.name} added by admin`,success:true})
+                 userUserId:isInvitedUserExist.user_id,
+                 role:'User'
+              }
+              )
+              res.status(201).send({response:`${isInvitedUserExist.name} added by admin`,success:true})
           }
           else
           {

@@ -19,6 +19,11 @@ const userGroup=sequelize.define('UserGroupTable',
         {
             type:Sequelize.INTEGER,
             allowNull:false
+        },
+        role:
+        {
+            type:Sequelize.STRING,
+            allowNull:false
         }
     }
 )
