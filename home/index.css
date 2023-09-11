@@ -12,6 +12,7 @@ body{ min-height: 100vh;
     display: flex;
     flex-direction: column;
     background:linear-gradient(85deg,rgb(143, 236, 171),rgb(180, 243, 208));
+    font-family: Poppins;
 }
 article{ flex:1; }
 
@@ -163,7 +164,7 @@ a:hover
   }
   .icon
   {
-      background-color: white;
+      background-color: rgb(141, 141, 204);
       color: black;
       height: 60px;
       border-radius: 50%;
@@ -336,7 +337,7 @@ a:hover
 
 .modal-content button
 {
-   background: rgb(214, 148, 86);
+   background: rgb(141, 141, 204);
    border: none;
    border-radius: 5px ;
    text-decoration: none;

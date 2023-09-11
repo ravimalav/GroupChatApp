@@ -13,7 +13,7 @@ function parseJwt (token) {
 }
 
 const loginUserName=parseJwt(token).loginUserName
-console.log("login user name is "+loginUserName)
+
 
 window.addEventListener('DOMContentLoaded',async(e)=>
 {
@@ -29,8 +29,6 @@ window.addEventListener('DOMContentLoaded',async(e)=>
           .then(response=>response.json())
           .then((data)=>
           {
-            console.log(data.response)
-
             data.response.forEach((element)=>
             {
                 createGroupIcon(element,element.group_name)
@@ -133,10 +131,7 @@ function createGroupIcon(data,groupName)
         {
             chatUserName(element)
         })
-        
-        
 
-        //Show Group Admin name on top left
 
         // const divShowAdmin=document.querySelector('.showadminname')
 
@@ -146,10 +141,9 @@ function createGroupIcon(data,groupName)
 
     
         //create dropdown box 
-        dropDown()                       
+        dropDown()                         //Show Group Admin name on top left
 
-        // creating form to send message 
-        createFooterFunction()
+        createFooterFunction()              // creating form to send message 
         getOlderMessage()
     })
       
@@ -255,13 +249,11 @@ function getOlderMessage()
     const olderMessage=document.querySelector('.olderMessage')
   
 
-    console.log("array in ls is ", localStorage.getItem('array'))
     const lastId=parseInt(localStorage.getItem('lastId'))
     // get older messages 
     olderMessage.addEventListener('click',async(e)=>
     {
     try{
-        console.log("triggered")
         array=JSON.parse(localStorage.getItem('array'))
         const firstId=array.length>0?array[0].id:lastId
             e.preventDefault();
@@ -360,7 +352,7 @@ function getAdminList()
 const groupId=parseInt(localStorage.getItem('groupId'))
 // Get the button that opens the modal
 const admin=document.getElementById('admin')
-console.log("admin is ", admin)
+
 
 admin.addEventListener('click',async(e)=>
 {
@@ -379,7 +371,7 @@ admin.addEventListener('click',async(e)=>
            })
 
            const result=await getAdminName.json();
-           console.log("get admin lsit", result.response)
+  
            addDataInParagraph(result.response)
     }
     catch(err)
@@ -391,13 +383,10 @@ admin.addEventListener('click',async(e)=>
 // add admin name in paragraph dynamically
 
 async function addDataInParagraph(data)
-{
-    // const p=document.createElement('p')
-    // modalContent.appendChild(p)
-    
+{   
     modalContent.innerHTML=`<span class="close">&times;</span>`
 
-    await data.forEach((element)=>
+   data.forEach((element)=>
     {
         modalContent.innerHTML+=`
         <p>${element.name} is admin</p>`
@@ -406,7 +395,7 @@ async function addDataInParagraph(data)
 const span = document.getElementsByClassName("close")[0];
 
 // When the user clicks the button, open the modal 
-admin.onclick = function() {
+ {
   modal.style.display = "block";
 }
 
@@ -429,9 +418,6 @@ window.onclick = function(event) {
 
 function inviteUserInGroupFunction(){
     try{
-        // const divInviteUser=document.querySelector('.adduseringroup')
-
-        // divInviteUser.innerHTML+=`<button id="inviteuser">add user</button>`
         
         const groupId=parseInt(localStorage.getItem('groupId'))
         const inviteUserInGroup=document.getElementById('inviteuser')
@@ -452,7 +438,7 @@ function inviteUserInGroupFunction(){
                 body:JSON.stringify({inviteduserNumber})
             })
             const result=await invitedUserData.json()
-             console.log("inviteduserdata  ", result.response)
+            
             tBody.innerHTML+=`<p>${result.response}</p>`
         })
     }
@@ -467,7 +453,6 @@ async function userInformationFunction()
 {   
 // Get the button that opens the modal
 const userInfo=document.getElementById('userinfo')
-console.log("userinfo is ", userInfo)
 
 userInfo.addEventListener('click',async(e)=>
 {
@@ -486,8 +471,7 @@ userInfo.addEventListener('click',async(e)=>
            })
 
            const result=await userInfoData.json();
-           console.log("get user info ", result.response)
-           console.log("is admin ==>>>",result.isadmin.role)
+        
            showGroupUsers(result.response,result.isadmin.role)
     }
     catch(err)
@@ -511,8 +495,7 @@ modalContent.innerHTML=`<span class="close">&times;</span>`
     <p>${element.name}</p>
     <button class="removeButton" id=${element.user_id}>Remove</button>
     <button class="makeAdminButton" id=${element.user_id}>Make Admin</button>`
-     
-    
+      
     const removeButton=div.querySelector('.removeButton')
     removeButton.addEventListener('click',async(e)=>
     {
@@ -537,9 +520,8 @@ else{
 
 // Get the <span> element that closes the modal
 const span = document.getElementsByClassName("close")[0];
-
 // When the user clicks the button, open the modal 
-userInfo.onclick = function() {
+ {
   modal.style.display = "block";
 }
 
@@ -598,9 +580,6 @@ async function makeAdminFunction(userId)
     }
 }
 }
-
-
-
 
 
 function homePageFuntion()
