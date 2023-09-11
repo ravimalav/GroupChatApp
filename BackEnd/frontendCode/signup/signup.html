@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="./signup.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+    <script src="signup.js" defer></script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="forms-container">
+          <div class="form-control signup-form">
+            <form>
+              <h2>Signup</h2>
+              <input type="text" id="username" placeholder="Name" required />
+              <input type="email" id="useremail" placeholder="Email" required />
+              <input type="tel" id="userphone" placeholder="Mobile Number" required />
+              <input type="password" id="userpassword" placeholder="Password" required />
+              <button id="signupbtn">Signup</button>
+            </form>
+          </div>
+          <div class="form-control signin-form">
+            <form >
+              <h2>Login</h2>
+              <input type="email" id="loginemail" placeholder="Email" required />
+              <input type="password" id="loginpassword" placeholder="Password" required />
+              <button id="loginbtn">Login</button>
+            </form>
+           
+          </div>
+        </div>
+        <div class="intros-container">
+          <div class="intro-control signin-intro">
+            <div class="intro-control__inner">
+              <h2>Welcome back!</h2>
+              <p>
+                Welcome back! We are so happy to have you here. It's great to see you again. We hope you are enjoying chats with your friends and family member.
+              </p>
+              <button id="signup-btn">No account yet? Signup.</button>
+            </div>
+          </div>
+          <div class="intro-control signup-intro">
+            <div class="intro-control__inner">
+              <h2>Let's create one!</h2>
+              <p>
+                We are so excited to have you here.If you haven't already, create an account.
+              </p>
+              <button id="signin-btn">Already have an account? Signin.</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      
+</body>
+</html>
