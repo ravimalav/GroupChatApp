@@ -6,8 +6,6 @@ exports.createGroup=async(req,res)=>
 {
     try{
          const {groupName}=req.body;
-         console.log("groupname===>>>"+groupName)
-         console.log("username===>>>"+req.user.name)
          const createGroup=await Group.create(
             {
                 group_name:groupName,
@@ -49,7 +47,6 @@ exports.getGroupsName=async(req,res)=>
         {
           where:{
             id:records.map((res)=>res.groupTableId)
-                //  id:records[0].groupTableId 
           }
         }
        )
@@ -117,9 +114,7 @@ exports.inviteUser=async(req,res)=>
               role:'Admin'
             }
           }
-         )          
-         console.log("check requesteduser is exist or not at invite user controller===>>>>", isRequestedUserAdmin)
-        
+         )         
           if(isInvitedUserExist  && isRequestedUserAdmin )
           {
             await userGroup.create(

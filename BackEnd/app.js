@@ -2,14 +2,10 @@ const express=require('express')
 
 const app=express()
 
-const sequelize=require('./util/database')
-
 const dotenv=require('dotenv')
 dotenv.config()
 
-//socket.io for real time system
-
-const socket=require('socket.io')
+const sequelize=require('./util/database')
 
 
 const bodyParser=require("body-parser")

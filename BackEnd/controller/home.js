@@ -9,7 +9,6 @@ exports.getusers=async(req,res)=>
     try{
         await req.user.update({login_status:true})
         const groupId=req.header('GroupId')
-        console.log("get users groupId===>>>>> ", groupId)
          
         const userId=await userGroup.findAll(
             {
@@ -20,7 +19,7 @@ exports.getusers=async(req,res)=>
             }
         )
          const records=await userId.map(result=>result.userUserId)
-         console.log("user id records that belongs to group table ", records)
+     
          const userName=await User.findAll(
             {
                 where:{
@@ -56,8 +55,7 @@ exports.removeUser=async(req,res)=>
     const{userId}=req.params
     try{
 
-        //check that user that send deleted request is admin or not\
-
+        //check that user that send deleted request is admin or not
         const isAdmin=await userGroup.findOne(
             {
                 where:{
@@ -67,7 +65,6 @@ exports.removeUser=async(req,res)=>
                 }
             }
         )
-        console.log("chekc for admin ", isAdmin)
           if(isAdmin)
           {
             await userGroup.destroy(
@@ -79,7 +76,6 @@ exports.removeUser=async(req,res)=>
                 }
               )
               const findUser=await User.findByPk(userId)
-              console.log("user is removed successfully")
               res.status(201).send({response:`${findUser.name} removed by Admin`})
           }
           else
@@ -100,7 +96,6 @@ exports.makeAdmin=async(req,res)=>
           const {userId}=req.params
 
           //check user that make the request is admin or not
-
           const isAdmin=await userGroup.findOne(
             {
                 where:
@@ -111,7 +106,7 @@ exports.makeAdmin=async(req,res)=>
                 }
             }
           )
-              console.log("chek admin or not", isAdmin)
+              
           if(isAdmin)
           {
             const userThatWillUpdate=await userGroup.findOne(          
@@ -129,7 +124,6 @@ exports.makeAdmin=async(req,res)=>
                     role:'Admin'
                 }
             )
-            console.log("role is updated ",userThatWillUpdate)
             res.status(201).send({success:true})
           }
           else{

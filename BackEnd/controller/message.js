@@ -21,7 +21,6 @@ exports.getMessages=async(req,res)=>
     }
 }
 
-
 exports.postmessage=async(req,res)=>
 {
     try{
@@ -44,7 +43,6 @@ exports.postmessage=async(req,res)=>
     }
 }
 
-
 exports.oldmessages=async(req,res)=>
 {
     try{
@@ -53,15 +51,7 @@ exports.oldmessages=async(req,res)=>
             return res.status(500).send({response:"There is no message in group"})
         }
         const lastId=+req.query.id;
-        console.log("id is===>>>>" ,lastId)
         const groupId=req.header('GroupId')
-    
-        const numberOfRaws= await Message.count(
-            {
-                where:{groupTableId:groupId}
-            }
-        )
-        console.log("number of raws are ",numberOfRaws)
         
           const findOldMessages=await Message.findAll(
             {

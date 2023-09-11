@@ -1,13 +1,13 @@
-
+const process=require('process')
 const Sequelize=require('sequelize')
 
 const sequelize=new Sequelize(
-    'groupchatapp',
-    'root',
-    'ravi2233',
+    process.env.DB_NAME,
+    process.env.DB_USER_NAME,
+    process.env.DB_PASSWORD,
     {
        dialect:'mysql',
-       host:'localhost'
+       host:process.env.DB_HOST_NAME
     }
 )
 

@@ -27,7 +27,6 @@ exports.signup=async(req,res)=>
         {
            return res.status(401).send({response:"user already exist",success:false})
         }
-          
             const createUser=await User.create(
                 {
                     name:userName,
@@ -37,16 +36,13 @@ exports.signup=async(req,res)=>
                 }
             )
         
-            res.status(200).send({response:createUser,success:true})
-        
+            res.status(200).send({response:createUser,success:true})  
     }
     catch(error)
     {
        res.status(500).send({error:"signup invalid"})
     }
 }
-
-
 
 exports.login=async(req,res)=>
 {
