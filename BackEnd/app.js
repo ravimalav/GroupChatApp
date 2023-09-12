@@ -5,8 +5,9 @@ const app=express()
 const dotenv=require('dotenv')
 dotenv.config()
 
-const sequelize=require('./util/database')
+const path=require('path')
 
+const sequelize=require('./util/database')
 
 const bodyParser=require("body-parser")
 app.use(bodyParser.json())
@@ -31,6 +32,11 @@ app.use('/group',groupRouter)
 
 const messageRouter=require('./routes/message')
 app.use('/message',messageRouter)
+
+app.use((req,res)=>
+{
+   res.sendFile(path.join(__dirname,`frontendCode/${req.url}`))
+})
 
 //assosiations
 
