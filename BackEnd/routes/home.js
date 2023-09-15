@@ -11,5 +11,4 @@ router.delete('/removeuser/:userId',authentication.authenticate,homeController.r
 router.put('/makeadmin/:userId',authentication.authenticate,homeController.makeAdmin)
 
 
-
 module.exports=router

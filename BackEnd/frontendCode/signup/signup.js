@@ -30,8 +30,8 @@ signupButton.addEventListener('click',async(e)=>
          }
          
 
-        //  const signupData=await axios.post('http://13.126.61.40:3000/user/signup',obj)
-         const signupData=await fetch('http://13.126.61.40:3000/user/signup',
+        //  const signupData=await axios.post('http://localhost:3000/user/signup',obj)
+         const signupData=await fetch('http://localhost:3000/user/signup',
          {method:'POST',
          credential:'include',
          headers: {
@@ -76,7 +76,7 @@ loginButton.addEventListener('click',async(e)=>
           loginPassword
          }
 
-         const loginData=await fetch('http://13.126.61.40:3000/user/login',
+         const loginData=await fetch('http://localhost:3000/user/login',
          {
           method:'POST',
           credentials:'include',
@@ -91,7 +91,7 @@ loginButton.addEventListener('click',async(e)=>
          {
           alert("bravo!,welcome to group chat app")
           localStorage.setItem('token',response.token)
-          window.location.href='/home/index.html'
+          window.location.href="/frontendCode/home/index.html"
          }
          else if(response.success===false)
          {

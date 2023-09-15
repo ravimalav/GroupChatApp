@@ -16,6 +16,13 @@ body{ min-height: 100vh;
 }
 article{ flex:1; }
 
+.welcome-message
+{
+  display: flex;
+  align-items: center;
+  margin: auto;
+}
+
 .container
 {
     display: flex;
@@ -40,6 +47,12 @@ article{ flex:1; }
     align-items: center;
 }
 
+.typingStatus
+{
+  position: absolute;
+  left: 0;
+  margin: 25px 0px 0px 5px;
+}
 
 footer
 {
