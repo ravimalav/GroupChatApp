@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000");
+const socket = io("http://13.126.61.40:3000");
 
 socket.on("welcome-message", (data) => {
   document.querySelector(".welcome-message").innerHTML = `<h3>${data}</h3>`;
@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", async (e) => {
   try {
     e.preventDefault();
     mainMessageArray = [];
-    await fetch("http://localhost:3000/group/getgroupsname", {
+    await fetch("http://13.126.61.40:3000/group/getgroupsname", {
       method: "get",
       credential: "include",
       headers: {
@@ -57,15 +57,18 @@ const groupIconName = document.querySelector("#tbodyoficon");
 createGroupButton.addEventListener("click", async (e) => {
   try {
     const groupName = prompt("enter group name");
-    const groupData = await fetch(`http://localhost:3000/group/creategroup`, {
-      method: "post",
-      credential: "include",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-        Authorization: token,
-      },
-      body: JSON.stringify({ groupName }),
-    });
+    const groupData = await fetch(
+      `http://13.126.61.40:3000/group/creategroup`,
+      {
+        method: "post",
+        credential: "include",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+          Authorization: token,
+        },
+        body: JSON.stringify({ groupName }),
+      }
+    );
     const res = await groupData.json();
 
     createGroupIcon(res.response, groupName);
@@ -105,7 +108,7 @@ function createGroupIcon(data, groupName) {
     localStorage.setItem("groupId", data.id);
 
     //To know which user joined the group
-    const getUserData = await fetch("http://localhost:3000/home/getusers", {
+    const getUserData = await fetch("http://13.126.61.40:3000/home/getusers", {
       method: "get",
       credential: "include",
       headers: {
@@ -137,13 +140,6 @@ function createGroupIcon(data, groupName) {
   div.appendChild(anchor);
 }
 
-// var setImgSrc = (elm) => {
-//   console.log("setImageFunction, this value is", elm);
-//   console.log("src is " + src);
-//   var fr = new FileReader();
-//   fr.onload = () => (src = fr.result);
-//   fr.readAsArrayBuffer(elm.files[0]);
-// };
 // create footer and send message button
 
 const containerFooter = document.querySelector(".containerFooter");
@@ -213,7 +209,7 @@ function createFooterFunction() {
       });
 
       const postMessage = await fetch(
-        `http://localhost:3000/message/postmessage`,
+        `http://13.126.61.40:3000/message/postmessage`,
         {
           method: "post",
           credential: "include",
@@ -233,7 +229,7 @@ function createFooterFunction() {
       if (fileInput) {
         const myFile = document.getElementById("myfile");
         const mediaMessage = await fetch(
-          `http://localhost:3000/message/mediamessage`,
+          `http://13.126.61.40:3000/message/mediamessage`,
           {
             method: "post",
             credential: "include",
@@ -248,24 +244,17 @@ function createFooterFunction() {
 
         const response = await mediaMessage.json();
         const fileUrl = response.fileurl;
-        console.log("response ==>", fileUrl);
 
         // storing image in files
         socket.emit("send file", fileUrl);
         tBody.innerHTML += `<div><img src="${fileUrl}" height=50px width=50px></div>`;
         socket.on("sentImg", (data) => {
-          console.log("multimedia message is ", data.image);
-          // Create Img...
-          // const div = document.createElement("div");
-          // const img = document.createElement("img");
-          // img.src = data.image;
-          // div.appendChild(img);
           tBody.innerHTML += `<div><a id="hreflink"><img src="${data.image}" height=100px width=100px></a></div>`;
 
           const a = document.getElementById("hreflink");
           a.addEventListener("click", () => {
             a.href = fileUrl;
-            console.log("href of image tag ", a.href);
+
             a.download = "image.png";
             a.click();
           });
@@ -298,7 +287,7 @@ function getOlderMessage() {
 
       e.preventDefault();
       const oldMessages = await fetch(
-        `http://localhost:3000/message/oldmessages?id=${lastid}`,
+        `http://13.126.61.40:3000/message/oldmessages?id=${lastid}`,
         {
           method: "get",
           credential: "include",
@@ -384,15 +373,18 @@ function getAdminList() {
     try {
       e.preventDefault();
 
-      const getAdminName = await fetch("http://localhost:3000/group/getadmin", {
-        method: "get",
-        credential: "include",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-          Authorization: token,
-          GroupId: `${groupId}`,
-        },
-      });
+      const getAdminName = await fetch(
+        "http://13.126.61.40:3000/group/getadmin",
+        {
+          method: "get",
+          credential: "include",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            Authorization: token,
+            GroupId: `${groupId}`,
+          },
+        }
+      );
 
       const result = await getAdminName.json();
 
@@ -446,7 +438,7 @@ function inviteUserInGroupFunction() {
       e.preventDefault();
       const inviteduserNumber = prompt("Enter User Phone Number");
       const invitedUserData = await fetch(
-        `http://localhost:3000/group/adduseringroup`,
+        `http://13.126.61.40:3000/group/adduseringroup`,
         {
           method: "post",
           credential: "include",
@@ -475,15 +467,18 @@ async function userInformationFunction() {
     try {
       e.preventDefault();
 
-      const userInfoData = await fetch("http://localhost:3000/home/getusers", {
-        method: "get",
-        credential: "include",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-          Authorization: token,
-          GroupId: `${groupId}`,
-        },
-      });
+      const userInfoData = await fetch(
+        "http://13.126.61.40:3000/home/getusers",
+        {
+          method: "get",
+          credential: "include",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            Authorization: token,
+            GroupId: `${groupId}`,
+          },
+        }
+      );
 
       const result = await userInfoData.json();
 
@@ -549,7 +544,7 @@ async function userInformationFunction() {
 
   async function removeUserFunction(userId) {
     try {
-      await fetch(`http://localhost:3000/home/removeuser/${userId}`, {
+      await fetch(`http://13.126.61.40:3000/home/removeuser/${userId}`, {
         method: "delete",
         credential: "include",
         headers: {
@@ -565,7 +560,7 @@ async function userInformationFunction() {
 
   async function makeAdminFunction(userId) {
     try {
-      await fetch(`http://localhost:3000/home/makeadmin/${userId}`, {
+      await fetch(`http://13.126.61.40:3000/home/makeadmin/${userId}`, {
         method: "put",
         credential: "include",
         headers: {
