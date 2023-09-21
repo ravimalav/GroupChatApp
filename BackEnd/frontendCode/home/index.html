@@ -1,71 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link rel="stylesheet" href="index.css">
-    <script src=
-    "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
-      </script>
-        
-        <script src=
-    "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js">
-      </script>
-   <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous" defer></script>
-      
-      <script src="index.js" defer></script>
-    
-</head>
-<body>
-  <main class="main">
-    <aside class="asidebar">
-      <div class="createGroup">
-        <button id="creategroupbtn">create new group</button>
-      </div>    
-      
-      <table class="table">         
-        <tbody id="tbodyoficon">
-          <div id="groupIconContainer">
-            
-          </div>
-        </tbody>
-      </table>     
-   </aside>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <div class="container">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script
+      src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+      integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+      crossorigin="anonymous"
+      defer
+    ></script>
+
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <main class="main">
+      <aside class="asidebar">
+        <div class="createGroup">
+          <button id="creategroupbtn">create new group</button>
+        </div>
+
+        <table class="table">
+          <tbody id="tbodyoficon">
+            <div id="groupIconContainer"></div>
+          </tbody>
+        </table>
+      </aside>
+
+      <div class="container">
         <header class="header">
-            <div class="typingStatus"></div>
-            <div><h3>Chat App</h3></div>
-            <div class="olderMessagediv">
-                  
-            </div>
-               <!-- dropdown list  -->
-            <div class="dropdown" id="drop-down">
-  
-            </div>
+          <div class="typingStatus"></div>
+          <div><h3>Chat App</h3></div>
+          <div class="olderMessagediv"></div>
+          <!-- dropdown list  -->
+          <div class="dropdown" id="drop-down"></div>
         </header>
 
         <!-- The Modal -->
-<div id="myModal" class="modal">
+        <div id="myModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content"></div>
+        </div>
+        <div class="welcome-message"></div>
+        <table class="table table-striped">
+          <tbody id="tbody"></tbody>
+        </table>
 
-  <!-- Modal content -->
-  <div class="modal-content">
-  </div>
-
-</div>
-        <div class="welcome-message">
-          
-        </div> 
-          <table class="table table-striped">         
-            <tbody id="tbody">
-            </tbody>
-          </table>
-    
-          <div class="containerFooter"></div>     <!-- div that contains footer -->
-          
-    </div>
-  </main>
-</body>
+        <div class="containerFooter"></div>
+        <!-- div that contains footer -->
+      </div>
+    </main>
+  </body>
 </html>

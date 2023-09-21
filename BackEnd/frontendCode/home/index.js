@@ -137,6 +137,13 @@ function createGroupIcon(data, groupName) {
   div.appendChild(anchor);
 }
 
+// var setImgSrc = (elm) => {
+//   console.log("setImageFunction, this value is", elm);
+//   console.log("src is " + src);
+//   var fr = new FileReader();
+//   fr.onload = () => (src = fr.result);
+//   fr.readAsArrayBuffer(elm.files[0]);
+// };
 // create footer and send message button
 
 const containerFooter = document.querySelector(".containerFooter");
@@ -148,7 +155,8 @@ function createFooterFunction() {
     <div class="footerDiv">
        <form action="" id="form">
         <input type="text" name="message" id="message" placeholder="Type a message" autofocus />
-        <button id="sendbutton">send</button>
+        <input type="file" id="myfile" name="myfile" accept="image/*">
+        <button id="sendbutton" >send</button>
        </form>
     </div>
   </footer> `;
@@ -164,8 +172,10 @@ function createFooterFunction() {
     });
   }
 
-  //applying oninput event
   const messageInput = document.getElementById("message");
+
+  //applying oninput event
+
   messageInput.addEventListener("input", () => {
     triggerTyping();
   });
@@ -181,18 +191,21 @@ function createFooterFunction() {
     try {
       e.preventDefault();
 
-      socket.emit("stop typing");
+      socket.emit("stop typing"); //detect event when user stop typing
       socket.on("stop typing", (data) => {
         document.querySelector(".typingStatus").innerHTML = ``;
       });
 
       const inputMessage = document.getElementById("message").value;
+      const fileInput = document.getElementById("myfile").value;
+
       //to store first 10 value in local storage in form of array
 
-      socket.emit("new message", inputMessage);
       tBody.innerHTML += `<tr>
                 <td><span>You:</span> ${inputMessage}</td>
                 </tr>`;
+
+      socket.emit("new message", inputMessage);
       socket.on("new message", (data) => {
         tBody.innerHTML += `<tr>
                 <td><span>${data.username.username}:</span> ${data.message}</td>
@@ -216,6 +229,48 @@ function createFooterFunction() {
       const postMessageData = await postMessage.json();
       mainMessageArray.push(postMessageData.response); //store singlel single message in mainMessageArray
 
+      //send ultimedia message link
+      if (fileInput) {
+        const myFile = document.getElementById("myfile");
+        const mediaMessage = await fetch(
+          `http://localhost:3000/message/mediamessage`,
+          {
+            method: "post",
+            credential: "include",
+            headers: {
+              "Content-Type": "application/json;charset=utf-8",
+              Authorization: token,
+              GroupId: `${groupId}`,
+            },
+            body: JSON.stringify({ fileInput }),
+          }
+        );
+
+        const response = await mediaMessage.json();
+        const fileUrl = response.fileurl;
+        console.log("response ==>", fileUrl);
+
+        // storing image in files
+        socket.emit("send file", fileUrl);
+        tBody.innerHTML += `<div><img src="${fileUrl}" height=50px width=50px></div>`;
+        socket.on("sentImg", (data) => {
+          console.log("multimedia message is ", data.image);
+          // Create Img...
+          // const div = document.createElement("div");
+          // const img = document.createElement("img");
+          // img.src = data.image;
+          // div.appendChild(img);
+          tBody.innerHTML += `<div><a id="hreflink"><img src="${data.image}" height=100px width=100px></a></div>`;
+
+          const a = document.getElementById("hreflink");
+          a.addEventListener("click", () => {
+            a.href = fileUrl;
+            console.log("href of image tag ", a.href);
+            a.download = "image.png";
+            a.click();
+          });
+        });
+      }
       const form = document.getElementById("form");
       form.reset();
     } catch (err) {
